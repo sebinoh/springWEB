@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sqlmap.board_SQL">
+
+	<!-- 모든 글 가져오기 -->
+	<select id="select_list" resultType="hashMap">  
+	<![CDATA[  
+	select  
+	@rownum:= @rownum+1 as num, title, write_date, writer,content, user.name, board_id
+	from  board join user
+	on board.writer = user.id
+    where (@rownum :=0)=0
+	order by write_date desc
+	]]>
+	</select>
+	
+	<!-- 새 글 등록 -->
+	<insert id="insert_paper" parameterType="com.myworld.spring.DTO.paperDTO">
+	<![CDATA[
+		insert into board(title, content, writer)
+		values(#{title}, #{content}, #{writer})
+	]]>
+	</insert>
+	
+	<select id="select_detail" parameterType="int" resultType="com.myworld.spring.DTO.paperDTO">  
+	<![CDATA[  
+	select  
+	title, write_date, writer,content, user.name as writer_name, board_id
+	from  board join user
+	on board.writer = user.id
+	where board.board_id = #{board_id}
+	]]>
+	</select>
+	
+	<delete id="delete_paper" parameterType="int">
+	<![CDATA[  
+	delete  
+	from board
+	where board_id = #{board_id}
+	]]>
+	</delete>
+	
+	<update id="update_paper" parameterType="com.myworld.spring.DTO.paperDTO">
+	<![CDATA[
+		update board
+		set title=#{title}, content=#{content}, write_date = now()
+		where writer=#{writer}
+	]]>
+	</update>
+	
+</mapper>
