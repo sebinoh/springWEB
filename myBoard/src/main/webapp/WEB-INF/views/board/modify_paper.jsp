@@ -16,7 +16,7 @@
 	<!--=========================== related Bootstrap ==================================-->
 	<!-- <link href="${path}/resources/css/board.css" rel="stylesheet"/> 	 -->
 	
-	<title>글 상세보기</title>
+	<title>글 수정하기</title>
 	
 </head>
 <body>
@@ -63,47 +63,46 @@
 	    </div>
 	  </div>
 	</nav>
-	<!--====================================== nav바 =====================================-->
-	<div class="container" style="padding-top: 50px;">
-		<div>
-			<p style="font-size: 4vw; font-weight: bold;">${data.title}</p>
-		</div>
-		<div class="row">
-			<div class="col-2">
-				<p>${data.writer_name}</p>
+	<!--====================================== nav바 ===================================================-->
+	<!-- ================================== 수정 값 입력 부분 =============================================== -->
+	<form method="post" action="/put">
+		<div class="container" style="padding-top: 50px;">
+			<div>
+				<input style="font-size: 4vw; font-weight: bold;" value="${paper.title}" name="title"></input>
 			</div>
-			<div class="col-2">
-				<p><fmt:formatDate value="${data.write_date}" pattern="yyyy-MM-dd" /></p>
+			<div class="row">
+				<div class="col-2">
+					<p>${paper.writer_name}</p>
+				</div>
+				<div class="col-2">
+					<p><fmt:formatDate value="${paper.write_date}" pattern="yyyy-MM-dd" /></p>
+				</div>
+				<div class="col-2">
+					<input type="hidden" name="board_id" value="${paper.board_id}" readonly="readonly"></input>
+				</div>
 			</div>
+			<div style="padding-top: 30px; padding-bottom: 30px; height:15rem;">
+			     <textarea style="width: 70%; height:100%;" name="content">${paper.content}</textarea>
+			 </div>
 		</div>
-		<div style="padding-top: 30px; padding-bottom: 30px;">
-		     <p>${data.content}</p>
-		 </div>
-	</div>
-	<!--=================================== 삭제 버튼 ======================================-->
+	<!--=================================== 저장 버튼 ======================================-->
 	<div class="container" id="app">
 		<template v-if="showDeleteBtn">
-		<div class="row">
 			<div class="col-2">
-				<form method="post" action="/delete/${data.board_id}">
-					<button id="delete_button" type="submit" class="btn btn-danger" style="width: 100%">삭제</button>
-				</form>
-			</div>
-			<div class="col-2">
-				<form method="get" action="/put/${data.board_id}">
-					<button id="modify_button" type="submit" class="btn btn-warning" style="width: 100%">수정</button>
-				</form>
+					<button id="modify_button" type="submit" class="btn btn-warning" style="width: 100%">저장</button>
 			</div>
 		</div>
 		</template>
 	</div>
-	<!--=================================== 삭제 버튼 ======================================-->
+	</form>
+	<!--=================================== 저장 버튼 ======================================-->
+	<!-- ================================== 수정 값 입력 부분 =============================================== -->
 </body>
 <script>
 	
 	var user = '${userInfo}';
 	var userId = '${userInfo.id}';
-	var writerId = '${data.writer}';
+	var writerId = '${paper.writer}';
 	new Vue({
 		el: "#app",
 		data: {

@@ -120,6 +120,7 @@ public class UserController {
 		
 	}
 	
+	//글 상세보기 눌렀을 때
 	@GetMapping("/bbs/{board_id}")
 	public ModelAndView detail(@PathVariable int board_id){
 		System.out.println("detail() controller들어옴...");
@@ -173,16 +174,34 @@ public class UserController {
 		}
 	}
 	
+	//수정하기 버튼을 눌렀을 때
+	@GetMapping("/put/{paper}")
+	public ModelAndView request_updatePaper(@PathVariable int paper, HttpServletRequest request) {
+		ModelAndView mv = new ModelAndView("board/modify_paper");
+		HttpSession session = request.getSession();
+		UserDTO loginedUser = (UserDTO)session.getAttribute("userInfo");
+		mv.addObject("UserInfo", loginedUser);	//로그인 정보 넘김
+		paperDTO p = this.boardSv.showDetail(paper);	//글 상세 정보 받음
+		mv.addObject("paper", p);	//글 정보 넘김
+		return mv;
+	}
+	
+	//수정 완료 버튼을 눌렀을 때
 	@PostMapping("/put")
-	public String update_paper(paperDTO paper, RedirectAttributes redirect) {
+	public String update_paper (paperDTO paper, RedirectAttributes redirect, HttpServletRequest request) {
+		System.out.println("수정 컨트롤러 들어옴...");
+		System.out.println(paper.getBoard_id());
+		HttpSession session = request.getSession();
+		UserDTO loginUser = (UserDTO)session.getAttribute("userInfo");
+		paper.setWriter(loginUser.getId());
 		boolean success = this.boardSv.update_paper(paper);
 		if(success) {
 			redirect.addFlashAttribute("msg", "정상적으로 글이 수정 되었습니다.");
-			return "redirect:/detail/{}";
+			return "redirect:/bbs/"+paper.getBoard_id();
 		}
 		else {
 			redirect.addFlashAttribute("msg", "수정 실패 ... 다시 시도해주세요 ㅠㅠ");
-			return "redirect:/put/{paper.}";
+			return "redirect:/bbs";
 		}
 	}
 		

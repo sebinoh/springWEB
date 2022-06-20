@@ -44,7 +44,7 @@
 	<![CDATA[
 		update board
 		set title=#{title}, content=#{content}, write_date = now()
-		where writer=#{writer}
+		where writer=#{writer} and board_id=#{board_id}
 	]]>
 	</update>
 	

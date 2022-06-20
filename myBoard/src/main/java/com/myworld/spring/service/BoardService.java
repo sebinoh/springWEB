@@ -53,7 +53,12 @@ public class BoardService {
 	
 	//게시글 수정
 	public boolean update_paper(paperDTO paper) {
+		System.out.println("service 단 update_paper() 들어옴...");
+		//줄바꿈 문자 변환
+		String convertContent = paper.getContent().replaceAll("\r\n", "<br>");
+		paper.setContent(convertContent);
 		int result = this.dao.update_paper(paper);
+		System.out.println("result 값은   =========================="+result);
 		if(result ==1) {
 			return true;
 		}
